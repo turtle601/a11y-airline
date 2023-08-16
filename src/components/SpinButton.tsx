@@ -1,54 +1,58 @@
-import React, { useState, MouseEvent } from "react";
-import "./SpinButton.css";
+import { ChangeEventHandler } from 'react';
 
-const SpinButton: React.FC = () => {
-  const [count, setCount] = useState<number>(0);
-  const [isTooltipVisible, setIsTooltipVisible] = useState<boolean>(false);
+interface Props {
+  value: string;
+  onChange: ChangeEventHandler<HTMLInputElement>;
+  onBlur: () => void;
+  onIncrease: () => void;
+  onDecrease: () => void;
+  max: number;
+  min: number;
+  statusMessage: string;
+}
 
-  const increment = () => {
-    setCount((prevCount) => prevCount + 1);
-  };
-
-  const decrement = () => {
-    setCount((prevCount) => prevCount - 1);
-  };
-
-  const toggleTooltip = (event: MouseEvent<HTMLDivElement>) => {
-    setIsTooltipVisible(!isTooltipVisible);
-  };
-
+const SpinButton = ({
+  value,
+  onChange,
+  onBlur,
+  onIncrease,
+  onDecrease,
+  max,
+  min,
+  statusMessage,
+}: Props) => {
   return (
-    <section className="spinButtonContainer">
-      <div>
-        <h1>승객 선택</h1>
-        <div className="spinButtonLabel">
-          <label>성인</label>
-          <div
-            className="helpIcon"
-            onMouseEnter={toggleTooltip}
-            onMouseLeave={toggleTooltip}
-          >
-            ?
-            {isTooltipVisible && (
-              <span className="tooltip">최대 인원수는 3명까지 가능합니다</span>
-            )}
-          </div>
-        </div>
-        <button onClick={decrement} className="spinButton">
-          -
-        </button>
-        <input
-          type="text"
-          role="spinbutton"
-          readOnly
-          className="spinButtonInput"
-          value={count}
-        />
-        <button onClick={increment} className="spinButton">
-          +
-        </button>
+    <div>
+      <button
+        type="button"
+        style={{ fontSize: '20px' }}
+        onClick={onDecrease}
+        aria-label="성인 탑승자 한 명 줄이기"
+      >
+        -
+      </button>
+      <input
+        type="number"
+        title="성인 탑승객 수"
+        value={value}
+        onChange={onChange}
+        onBlur={onBlur}
+        max={max}
+        min={min}
+        style={{ fontSize: '20px' }}
+      />
+      <button
+        type="button"
+        style={{ fontSize: '20px' }}
+        onClick={onIncrease}
+        aria-label="성인 탑승자 한 명 늘리기"
+      >
+        +
+      </button>
+      <div role="status" style={{ width: 0, height: 0, overflow: 'hidden' }}>
+        {statusMessage}
       </div>
-    </section>
+    </div>
   );
 };
 
